@@ -22,6 +22,50 @@ function getInput(prompt) {
 // HINT: The result of step 6 is that each card will be an object inside of the deck array, for example [{suit: "diamonds", rank: "A", value: 0}, {suit: "diamonds", rank: "2", value: 1},...{etc}]. For example, if we wanted to organize the players and teams of the NBA with index numbers, we could write: nba.push({player: players[i], team: teams[n], index: i})
 // 7. After your loops, return deck, which should now return an array full of card objects if you were to run buildDeck().
 
+function buildDeck () { 
+  const suits = ["Hearts","Spades", "Clubs", "Diamonds"]
+  
+    const ranks = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jacks", "Queens", "Kings"]
+
+    const deck = [
+
+    ]
+
+    for (let s = 0; s < suits.length; s++) {
+      for (let r = 0; r < ranks.length; r++) {
+        const card = {
+          value : r,
+          suit : suits[s],
+          rank : ranks[r],
+
+        }
+        deck.push(card)
+
+      }
+
+    }
+    return deck }
+  
+buildDeck();
+console.log(buildDeck())
+
+
+
+
+
+
+  // for (let i = 0; i < students.length; i++) {
+  //     for (let o = 0; o < c.length; o++) {
+  //         console.log(students[i] + c[o]);
+  // }
+  
+  // }
+  
+  // }
+    
+  //  placements();
+
+
 // STEP TWO - Shuffling your deck
 // 1. use a function declaration to create a function called shuffle that takes deck as an argument.
 // 2. Inside this function create a variable called "shuffledDeck" that takes deck as its value.
@@ -35,16 +79,47 @@ function getInput(prompt) {
 // 10. Review the code from steps 7,8, and 9, and leave a comment explaining what you believe those lines of code are doing as they swap assignments of values between them.
 // 11. Finally, close the while loop and return "shuffledDeck". You should now be able to run shuffle(buildDeck()) in node and see your shuffled deck of cards.
 
+function shuffle (deck){
+  const shuffledDeck = deck
+  let currentIndex = deck.length -1 
+  let temporaryValue
+  let randomIndex 
+  while (currentIndex !== 0){
+    randomIndex = Math.ceil(Math.random()* 20)
+    temporaryValue = shuffledDeck[currentIndex] /* taking a random card from the deck and assigning it to the temporary value variable*/
+    // currentIndex = currentIndex -1     this is the same as below
+shuffledDeck[currentIndex] = shuffledDeck[randomIndex] /* randomIndex card is going to replace currentIndex card */
+shuffledDeck[randomIndex] = temporaryValue /* currentIndex card is going to replace the randomIndex card */
+    currentIndex--
+
+
+  }
+  return shuffledDeck;
+}
+
+
+
+
+
 // STEP THREE - Greeting the player
 // 1. Declare a function called greet()
 // 2. Inside that function, declare a variable called "name" and use "getInput()" to welcome the user to the game, ask for their name, and assign their answer.
 // 3. Console.log name
 // 4. return name
 // 5. Done.
+function greet() {
+  const name = getInput('Welcome to the card game!' + ' What is your name?') 
+console.log(name) 
+return name //has to be within curly brace because it's part of the function
+}
+
 
 // STEP FOUR - comparing cards
 // 1. declare a function called compare that takes two cards as arguments
 // 2. return the value property of the first card minus the value property of the second card.
+function compare(card1, card2){
+  return card1.value - card2.value
+}
 
 // STEP FIVE - Respond to User Guess
 // 1. declare a function called guess that takes two cards as arguments
@@ -55,6 +130,23 @@ function getInput(prompt) {
 // 6. If input equals l, check and see if it's a positive number.
 // 7. If input doesn't equal h or l, tell the user that they need to guess either h or l and that they get no points for this round, then return false.
 
+function guess (card1, card2) {
+  console.log(card1.rank, card1.suit) //make sure it matches key part in the object, not the arrays
+
+  let input = getInput("Do you think the next card will be 'h' or 'l' than your current card?")
+  //store the users response?
+  if (input == 'h') {
+return compare(card1, card2) <0
+  }
+  else if (input == 'l') {
+     return compare(card1, card2) >0
+  }
+else { console.log("Guess 'h' or 'l'. You get no points for this round.")
+return false 
+}
+      
+    }
+    
 // STEP SIX - Let's play!
 // 1. declare a function called playGame
 // 2. declare a variable called deck (it's okay to reuse -- remember scope!) that takes the result of the shuffle function. Remember that the shuffle function needs to take the results one of our other functions as its argument...
@@ -67,3 +159,25 @@ function getInput(prompt) {
 // 9. Close the conditional statement and assign nextCard to currentCard. You may have to write this as the type of variable that's always global...
 // 10. Close the while loop and use a ternary statement that checks if the length of the deck array has reached zero. If it has not, tell the user that they won. If it has reached zero, tell them that they're out of cards and they lost.
 // 11. Write a line of code to execute the playGame function.
+
+function playGame() {
+  const deck = shuffle(buildDeck()) //this is a function call. It's a functional call within a function call.
+
+  const playerName = greet()
+  let score = 0
+let currentCard = deck.pop() //assign is the same as equals  //deck.pop() <- this is a method call which is why we have open/closed parentheses
+while (score < 5 && score < deck.length){
+ let nextCard = deck.pop()  //use let, const you won't be able to reassign later
+if(guess(currentCard, nextCard)) {
+ score++
+ console.log(`Congratulations! Your score is ${score}`) 
+}
+else{
+  console.log("You are wrong. You recieved no points.")
+}
+currentCard = nextCard
+}
+deck.length == 0 ? console.log('You are out of card. You lost.'): console.log('You won') //this means we're at the end of the deck, we're checking the deck array has reached 0.
+
+}
+playGame();
